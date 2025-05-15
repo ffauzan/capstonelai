@@ -15,9 +15,9 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="w-10 h-10 rounded-md bg-teal-600 flex items-center justify-center text-white font-bold text-xl mr-2">
-              LC
+              NC
             </div>
-            <span className="font-bold text-xl text-gray-900">LearnConnect</span>
+            <span className="font-bold text-xl text-gray-900">NextCourse</span>
           </Link>
 
           {/* Desktop Navigation */}

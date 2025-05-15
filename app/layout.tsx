@@ -7,8 +7,8 @@ import Header from "@/components/header"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "LearnConnect - Find Your Perfect Course",
-  description: "Discover and compare online courses from top providers",
+  title: "NextCourse - Personalized Course Recommender",
+  description: "Personalized Course RecommenderS",
     generator: 'v0.dev'
 }
 

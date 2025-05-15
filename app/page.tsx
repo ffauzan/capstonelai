@@ -11,9 +11,13 @@ export default function Home() {
       <section className="bg-white py-12 md:py-20 border-b">
         <div className="container px-4 mx-auto max-w-6xl">
           <div className="max-w-3xl mx-auto text-center mb-10">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900">
-              Discover your next learning opportunity
+            <h1 className="text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+              NextCourse – The Next Step Starts Here
             </h1>
+            <p className="text-teal-600 font-medium text-lg mb-4">
+            Personalized Course Recommender
+
+            </p>
             <p className="text-gray-600 mb-8 text-lg">
               Find the perfect courses tailored to your interests and career goals
             </p>
