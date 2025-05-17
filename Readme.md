@@ -41,3 +41,48 @@ python run.py
 
 Server backend akan berjalan di http://localhost:5000
 
+### 2. Jalankan Frontend (Next.js)
+```
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend akan berjalan di http://localhost:3000
+
+🔗 Integrasi Frontend ↔ Backend
+Untuk menghubungkan frontend ke backend secara lokal:
+
+Gunakan fetch('http://localhost:5000/predict', {...}) di frontend untuk mengirim data ke Flask.
+
+Pastikan flask-cors aktif agar CORS tidak diblokir.
+
+```
+const res = await fetch('http://localhost:5000/predict', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify({
+    user_input: "example input",
+  }),
+});
+const data = await res.json();
+```
+
+📌 Catatan Tambahan
+Endpoint /predict di backend saat ini masih dummy, dan akan dihubungkan ke model ML saat sudah tersedia.
+
+Tim ML akan menambahkan file dan logika model ke dalam backend/app/model.py
+
+👥 Tim Pengembang
+Frontend Engineers: [Iwan Aslich - A704YBM231, Falih Fauzan - A008YBF154]
+
+Backend Engineers: [Falih Fauzan - A008YBF154, Iwan Aslich - A704YBM231]
+
+ML Engineers : [Joanne Landy Tantreece - A704XBM236, Rendika N. Suharto - A121YBM420]
+
+Project Manager: [Joanne Landy Tantreece - A704XBM236]
+
+📃 Lisensi
+Proyek ini dibuat sebagai bagian dari Capstone Project Laskar AI x Dicoding x Lintasarta.
