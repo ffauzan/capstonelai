@@ -8,6 +8,7 @@ NextCourse adalah platform rekomendasi kursus yang memanfaatkan teknologi Machin
 
 ## 📦 Struktur Proyek
 
+```
 capstonelai/
 ├── backend/ # Flask API Backend
 │ ├── app/
@@ -23,7 +24,7 @@ capstonelai/
 │ │ └── index.tsx (Home Page)
 │ └── ...
 ├── README.md
-
+```
 
 ---
 
