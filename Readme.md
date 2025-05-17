@@ -1,38 +1,43 @@
-# 📚 Course Platform - Web-Based Course Recommender (Capstone Project)
+# NextCourse - Personalized Course Recommender
 
-Project ini adalah prototipe sistem rekomendasi kursus online berbasis web yang dibuat menggunakan React, dengan integrasi model rekomendasi berbasis machine learning. Cocok dijalankan secara lokal menggunakan Docker.
+> ✨ **The Next Step Starts Here**
+
+NextCourse adalah platform rekomendasi kursus yang memanfaatkan teknologi Machine Learning untuk memberikan saran pembelajaran yang dipersonalisasi berdasarkan minat dan tujuan pengguna.
 
 ---
 
-## 🖥️ Cara Menjalankan di Windows (dengan Docker)
+## 📦 Struktur Proyek
 
-### 1. 🔧 Instalasi Docker Desktop
+capstonelai/
+├── backend/ # Flask API Backend
+│ ├── app/
+│ │ ├── init.py
+│ │ ├── routes.py
+│ │ └── model.py
+│ ├── run.py
+│ ├── requirements.txt
+│ └── .gitignore
+├── frontend/ # Next.js Frontend
+│ ├── components/
+│ ├── pages/
+│ │ └── index.tsx (Home Page)
+│ └── ...
+├── README.md
 
-Jika belum ada Docker di Windows:
 
-- Download Docker Desktop dari: https://www.docker.com/products/docker-desktop
-- Install seperti biasa
-- Aktifkan WSL2 saat diminta (jika Windows Home)
-- Restart PC setelah instalasi selesai
+---
 
-### 2. 🗂️ Ekstrak Project
+## 🚀 Menjalankan Aplikasi Secara Lokal
 
-- Ekstrak file `course-platform.zip`
-- Buka folder hasil ekstraksi, misalnya `course-platform`
-
-### 3. ▶️ Build & Jalankan dengan Docker
-
-Buka **PowerShell** atau **Terminal** di folder tersebut, lalu jalankan:
+### 1. Jalankan Backend (Flask)
 
 ```
-docker build -t course-platform .
-docker run -p 3000:3000 course-platform
+cd backend
+python3 -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+python run.py
 ```
 
-### 4. 🌐 Akses Aplikasi
-
-### 5. Buka browser, lalu kunjungi:
-
-
-http://localhost:3000
+Server backend akan berjalan di http://localhost:5000
 
