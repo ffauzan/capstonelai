@@ -31,10 +31,16 @@ export default function Header() {
             <Link href="/about" className="text-gray-900 font-medium hover:text-teal-600 transition-colors">
               About
             </Link>
-            <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-              Login
-            </Button>
-            <Button className="bg-teal-600 hover:bg-teal-700">Sign Up</Button>
+            <Link href="/auth/login">
+              <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
+                Login
+              </Button>
+            </Link>
+            <Link href="/auth/signup">
+              <Button className="bg-teal-600 hover:bg-teal-700">
+                Sign Up
+              </Button>
+            </Link>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -69,10 +75,16 @@ export default function Header() {
                 About
               </Link>
               <div className="flex space-x-4 pt-2">
-                <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50 w-full">
-                  Login
-                </Button>
-                <Button className="bg-teal-600 hover:bg-teal-700 w-full">Sign Up</Button>
+                <Link href="/auth/login" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                  <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50 w-full">
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/auth/signup" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="bg-teal-600 hover:bg-teal-700 w-full">
+                    Sign Up
+                  </Button>
+                </Link>
               </div>
             </nav>
           </div>
