@@ -26,8 +26,9 @@ export default function Header() {
               Home
             </Link>
             <Link href="/courses" className="text-gray-900 font-medium hover:text-teal-600 transition-colors">
-              Courses
-            </Link>
+  Courses
+</Link>
+
             <Link href="/about" className="text-gray-900 font-medium hover:text-teal-600 transition-colors">
               About
             </Link>
