@@ -2,12 +2,36 @@ import { Search } from "lucide-react"
 import CourseCard from "@/components/course-card"
 import FilterSidebar from "@/components/filter-sidebar"
 import MobileFilters from "@/components/mobile-filters"
-import { courses } from "@/lib/data"
 
-export default function Home() {
+interface Course {
+  id: number
+  course_title: string
+  subject: string
+  level: string
+  url: string
+  is_paid: boolean
+  price: number
+}
+
+async function getCourses(): Promise<Course[]> {
+  const res = await fetch("https://dev-nc-api.f3h.net/api/courses/random?n=9", {
+    cache: "no-store",
+  })
+
+  if (!res.ok) {
+    throw new Error("Gagal mengambil data kursus")
+  }
+
+  const json = await res.json()
+  return json.data ? json.data : json
+}
+
+export default async function Home() {
+  const courses = await getCourses()
+
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Hero Section with Search */}
+      {/* Hero Section */}
       <section className="bg-white py-12 md:py-20 border-b">
         <div className="container px-4 mx-auto max-w-6xl">
           <div className="max-w-3xl mx-auto text-center mb-10">
@@ -15,8 +39,7 @@ export default function Home() {
               NextCourse – The Next Step Starts Here
             </h1>
             <p className="text-teal-600 font-medium text-lg mb-4">
-            Personalized Course Recommender
-
+              Personalized Course Recommender
             </p>
             <p className="text-gray-600 mb-8 text-lg">
               Find the perfect courses tailored to your interests and career goals
@@ -44,17 +67,14 @@ export default function Home() {
         <h2 className="text-2xl font-bold mb-6 text-gray-900">Recommended for you</h2>
 
         <div className="lg:grid lg:grid-cols-4 lg:gap-8">
-          {/* Mobile Filters - Only visible on mobile */}
           <div className="lg:hidden mb-6">
             <MobileFilters />
           </div>
 
-          {/* Desktop Sidebar - Hidden on mobile */}
           <div className="hidden lg:block">
             <FilterSidebar />
           </div>
 
-          {/* Course Grid */}
           <div className="lg:col-span-3">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (

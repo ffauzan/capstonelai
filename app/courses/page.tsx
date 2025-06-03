@@ -39,7 +39,7 @@ export default async function CoursesPage() {
               <p className="text-gray-600 mb-1">{course.subject}</p>
               <p className="text-gray-500 mb-1">{course.level}</p>
               <p className="text-green-600 font-semibold mb-2">
-                {course.is_paid ? `Rp${course.price}` : "Gratis"}
+                {course.is_paid ? `$ ${course.price}` : "Gratis"}
               </p>
               <a href={course.url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
                 Lihat Course
