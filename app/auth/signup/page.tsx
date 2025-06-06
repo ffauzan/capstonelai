@@ -1,57 +1,66 @@
-"use client"
+'use client';
 
-import { useState } from "react"
-import { registerUser } from "@/lib/api"
-import { useRouter } from "next/navigation"
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function RegisterPage() {
-  const router = useRouter()
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+export default function SignupPage() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
 
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault()
-    try {
-      const { token, user } = await registerUser(name, email, password)
-      localStorage.setItem("token", token)
-      router.push("/")
-    } catch (err) {
-      setError("Failed to register")
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const res = await fetch('https://dev-nc-api.f3h.net/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('token', data.token); // simpan token
+      router.push('/onboarding'); // redirect onboarding
+    } else {
+      alert('Signup gagal');
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form onSubmit={handleRegister} className="bg-white p-8 shadow rounded w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
+    <div className="max-w-md mx-auto mt-10 p-6 border rounded">
+      <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
+      <form onSubmit={handleSignup} className="space-y-4">
         <input
           type="text"
           placeholder="Name"
-          className="w-full mb-4 p-2 border rounded"
           value={name}
           onChange={(e) => setName(e.target.value)}
+          className="w-full border px-3 py-2 rounded"
         />
         <input
           type="email"
           placeholder="Email"
-          className="w-full mb-4 p-2 border rounded"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="w-full border px-3 py-2 rounded"
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-6 p-2 border rounded"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          className="w-full border px-3 py-2 rounded"
         />
-        <button type="submit" className="w-full bg-teal-600 text-white py-2 rounded hover:bg-teal-700">
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded"
+        >
           Register
         </button>
       </form>
     </div>
-  )
+  );
 }
