@@ -1,12 +1,80 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { Menu, X, User, Bookmark } from "lucide-react" // 1. Import ikon Bookmark
 import { Button } from "@/components/ui/button"
+import Cookies from "js-cookie"
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = Cookies.get("token")
+    if (token) {
+      setIsLoggedIn(true)
+    }
+  }, [])
+
+  const handleLogout = () => {
+    Cookies.remove("token")
+    setIsLoggedIn(false)
+    router.push("/")
+    router.refresh()
+  }
+
+  // Komponen untuk tombol Autentikasi
+  const AuthButtons = ({ isMobile = false }: { isMobile?: boolean }) => {
+    const closeMenu = () => isMobile && setIsMenuOpen(false)
+
+    if (isLoggedIn) {
+      return (
+        <div className={`flex items-center ${isMobile ? 'flex-col space-y-4 pt-2' : 'space-x-2'}`}>
+          {/* 2. Tambahkan Link "My Bookmarks" di sini */}
+          <Link href="/bookmarks" onClick={closeMenu}>
+            <Button variant="ghost" className="hover:bg-teal-50">
+              <Bookmark className="h-5 w-5 md:mr-2" />
+              <span className="hidden md:inline">My Bookmarks</span>
+            </Button>
+          </Link>
+          <Link href="/profile" onClick={closeMenu}>
+            <Button variant="ghost" className="hover:bg-teal-50">
+              <User className="h-5 w-5 md:mr-2" />
+              <span className="hidden md:inline">Profile</span>
+            </Button>
+          </Link>
+          <Button
+            onClick={() => {
+              handleLogout()
+              closeMenu()
+            }}
+            variant="outline"
+            className="border-red-500 text-red-500 hover:bg-red-50 w-full md:w-auto"
+          >
+            Logout
+          </Button>
+        </div>
+      )
+    }
+
+    return (
+      <div className={`flex items-center ${isMobile ? 'space-x-4 pt-2' : 'space-x-8'}`}>
+        <Link href="/auth/login" onClick={closeMenu}>
+          <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50 w-full">
+            Login
+          </Button>
+        </Link>
+        <Link href="/signup" onClick={closeMenu}>
+          <Button className="bg-teal-600 hover:bg-teal-700 w-full">
+            Sign Up
+          </Button>
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <header className="bg-white border-b sticky top-0 z-50">
@@ -26,22 +94,12 @@ export default function Header() {
               Home
             </Link>
             <Link href="/courses" className="text-gray-900 font-medium hover:text-teal-600 transition-colors">
-  Courses
-</Link>
-
+              Courses
+            </Link>
             <Link href="/about" className="text-gray-900 font-medium hover:text-teal-600 transition-colors">
               About
             </Link>
-            <Link href="/auth/login">
-              <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50">
-                Login
-              </Button>
-            </Link>
-            <Link href="/auth/signup">
-              <Button className="bg-teal-600 hover:bg-teal-700">
-                Sign Up
-              </Button>
-            </Link>
+            <AuthButtons />
           </nav>
 
           {/* Mobile Menu Button */}
@@ -54,39 +112,16 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t">
             <nav className="flex flex-col space-y-4">
-              <Link
-                href="/"
-                className="text-gray-900 font-medium hover:text-teal-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link href="/" className="text-gray-900 font-medium hover:text-teal-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
                 Home
               </Link>
-              <Link
-                href="/courses"
-                className="text-gray-900 font-medium hover:text-teal-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link href="/courses" className="text-gray-900 font-medium hover:text-teal-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
                 Courses
               </Link>
-              <Link
-                href="/about"
-                className="text-gray-900 font-medium hover:text-teal-600 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
+              <Link href="/about" className="text-gray-900 font-medium hover:text-teal-600 transition-colors py-2" onClick={() => setIsMenuOpen(false)}>
                 About
               </Link>
-              <div className="flex space-x-4 pt-2">
-                <Link href="/auth/login" className="w-full" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50 w-full">
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/auth/signup" className="w-full" onClick={() => setIsMenuOpen(false)}>
-                  <Button className="bg-teal-600 hover:bg-teal-700 w-full">
-                    Sign Up
-                  </Button>
-                </Link>
-              </div>
+              <AuthButtons isMobile={true} />
             </nav>
           </div>
         )}

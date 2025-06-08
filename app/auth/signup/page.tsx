@@ -2,65 +2,145 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Cookies from 'js-cookie'; // Anda perlu install: npm install js-cookie @types/js-cookie
 
 export default function SignupPage() {
-  const [name, setName] = useState('');
+  // State untuk form input
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // State untuk User Feedback
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    const res = await fetch('https://dev-nc-api.f3h.net/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+    // 1. Lakukan Pendaftaran
+    try {
+      const registerRes = await fetch('https://dev-nc-api.f3h.net/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, email, password }),
+      });
 
-    if (res.ok) {
-      const data = await res.json();
-      localStorage.setItem('token', data.token); // simpan token
-      router.push('/onboarding'); // redirect onboarding
-    } else {
-      alert('Signup gagal');
+      if (!registerRes.ok) {
+        const errorData = await registerRes.json();
+        // Ambil pesan error dari API, atau gunakan pesan default
+        throw new Error(errorData.message || 'Pendaftaran gagal. Silakan coba lagi.');
+      }
+
+      // 2. Jika Pendaftaran Berhasil, Langsung Lakukan Login untuk UX yang lebih baik
+      const loginRes = await fetch('https://dev-nc-api.f3h.net/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+      });
+
+      if (!loginRes.ok) {
+          // Jika login gagal setelah register, arahkan ke halaman login manual
+          router.push('/auth/login?status=registered');
+          return;
+      }
+      
+      const loginData = await loginRes.json();
+      const { access_token } = loginData.data;
+
+      // 3. Simpan Token ke Cookies
+      Cookies.set('token', access_token, { expires: 7, secure: true }); // Simpan token selama 7 hari
+
+      // 4. Arahkan ke Halaman Onboarding
+      router.push('/onboarding');
+
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 border rounded">
-      <h1 className="text-2xl font-bold mb-4">Sign Up</h1>
-      <form onSubmit={handleSignup} className="space-y-4">
-        <input
-          type="text"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border px-3 py-2 rounded"
-        />
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded"
-        >
-          Register
-        </button>
-      </form>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-800">Buat Akun Baru</h1>
+            <p className="text-gray-500 mt-2">Mulai perjalanan belajar Anda bersama kami.</p>
+          </div>
+
+          {/* Menampilkan pesan error jika ada */}
+          {error && (
+            <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg" role="alert">
+              <p className="font-bold">Terjadi Kesalahan</p>
+              <p>{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSignup} className="space-y-5">
+            <div>
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-1">Username</label>
+              <input
+                id="username"
+                type="text"
+                placeholder="Masukkan username Anda"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="w-full border-gray-300 px-4 py-3 rounded-lg focus:ring-teal-500 focus:border-teal-500 transition"
+              />
+            </div>
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="nama@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full border-gray-300 px-4 py-3 rounded-lg focus:ring-teal-500 focus:border-teal-500 transition"
+                />
+            </div>
+            <div>
+                <label htmlFor="password"className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="w-full border-gray-300 px-4 py-3 rounded-lg focus:ring-teal-500 focus:border-teal-500 transition"
+                />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:bg-teal-400 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              {loading ? (
+                <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              ) : 'Daftar Sekarang'}
+            </button>
+          </form>
+          
+          <p className="text-center text-sm text-gray-600 mt-8">
+            Sudah punya akun?{' '}
+            <Link href="/auth/login" className="font-medium text-teal-600 hover:text-teal-500">
+              Masuk di sini
+            </Link>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
