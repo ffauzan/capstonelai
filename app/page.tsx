@@ -40,10 +40,10 @@ async function getCourses(
   if (hasFilters) {
     endpoint = `${apiBaseUrl}/api/courses?${queryParams.toString()}`
   } else if (token) {
-    endpoint = `${apiBaseUrl}/api/courses/recommender3?n=9`
+    endpoint = `${apiBaseUrl}/api/courses?${queryParams.toString()}`
     fetchOptions.headers = { 'Authorization': `Bearer ${token}` }
   } else {
-    endpoint = `${apiBaseUrl}/api/courses/random?n=9`
+    endpoint = `${apiBaseUrl}/api/courses?${queryParams.toString()}`
   }
 
   try {
@@ -61,7 +61,7 @@ async function getCourses(
     if (hasFilters) {
       return json.data.courses || []
     }
-    return json.data || []
+    return json.data.courses || []
   } catch (error) {
     console.error(error)
     return []
@@ -84,7 +84,7 @@ export default async function Home({
   const recommendationTitle = hasFilters
     ? "Hasil Filter Kursus"
     : token
-    ? "Rekomendasi Khusus Untuk Anda"
+    ? "Top Courses"
     : "Kursus Pilihan Untukmu"
 
   return (

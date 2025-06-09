@@ -13,7 +13,7 @@ export default function RecommendationPage() {
       },
     })
       .then((res) => res.json())
-      .then(setCourses);
+      .then((c) => setCourses(c.courses))
   }, []);
 
   return (

@@ -6,7 +6,7 @@ import Cookies from "js-cookie"
 import { Bookmark } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-
+import { Button } from "@/components/ui/button"
 // Interface tetap sama
 interface Course {
   id: number
@@ -118,6 +118,8 @@ export default function CourseCard({ course }: Props) {
               }`}
             />
           </button>
+
+     
         </div>
 
         <p className="text-sm text-gray-500 mb-1">{course.level}</p>
@@ -137,8 +139,16 @@ export default function CourseCard({ course }: Props) {
           className="block w-full text-center bg-teal-600 text-white px-4 py-2 mt-auto rounded-md text-sm hover:bg-teal-700 transition-colors"
           onClick={(e) => e.stopPropagation()}
         >
-          Lihat Course
+          View Course
         </a>
+
+        <Link 
+  href={`/recommendation2?course_id=${course.course_id}`} 
+>
+  <Button variant="outline" className="border-teal-600 text-teal-600 hover:bg-teal-50 w-full">
+    More Like This
+  </Button>
+</Link>
       </div>
     </div>
   )

@@ -7,10 +7,10 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 // Definisikan opsi filter yang sesuai dengan nilai di API Anda
 const SUBJECT_OPTIONS = [
-  { id: '1', name: 'Web Development' },
-  { id: '2', name: 'Business Finance' },
-  { id: '3', name: 'Musical Instruments' },
-  { id: '4', name: 'Graphic Design' },
+  { id: '1', name: 'Business Finance' },
+  { id: '2', name: 'Graphic Design' },
+  { id: '3', name: 'Web Development' },
+  { id: '4', name: 'Musical Instruments' },
 ];
 
 const LEVEL_OPTIONS = [
@@ -150,4 +150,3 @@ export default function FilterSidebar() {
     </div>
   );
 }
-//

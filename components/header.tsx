@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { Menu, X, User, Bookmark } from "lucide-react" // 1. Import ikon Bookmark
+import { useRouter, usePathname } from "next/navigation" // 1. Import usePathname
+import { Menu, X, User, Bookmark } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Cookies from "js-cookie"
 
@@ -11,13 +11,16 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const router = useRouter()
+  const pathname = usePathname() // 2. Dapatkan path URL saat ini
 
+  // 3. PERBAIKAN UTAMA:
+  // useEffect sekarang akan berjalan setiap kali URL (pathname) berubah.
   useEffect(() => {
     const token = Cookies.get("token")
-    if (token) {
-      setIsLoggedIn(true)
-    }
-  }, [])
+    // Menggunakan !!token adalah cara singkat untuk mengubah nilai menjadi boolean
+    // (true jika ada token, false jika tidak ada)
+    setIsLoggedIn(!!token)
+  }, [pathname]) // Bergantung pada pathname
 
   const handleLogout = () => {
     Cookies.remove("token")
@@ -26,24 +29,23 @@ export default function Header() {
     router.refresh()
   }
 
-  // Komponen untuk tombol Autentikasi
+  // Komponen untuk tombol Autentikasi (tidak ada perubahan di sini)
   const AuthButtons = ({ isMobile = false }: { isMobile?: boolean }) => {
     const closeMenu = () => isMobile && setIsMenuOpen(false)
 
     if (isLoggedIn) {
       return (
         <div className={`flex items-center ${isMobile ? 'flex-col space-y-4 pt-2' : 'space-x-2'}`}>
-          {/* 2. Tambahkan Link "My Bookmarks" di sini */}
           <Link href="/bookmarks" onClick={closeMenu}>
             <Button variant="ghost" className="hover:bg-teal-50">
               <Bookmark className="h-5 w-5 md:mr-2" />
-              <span className="hidden md:inline">My Bookmarks</span>
+              <span className={isMobile ? '' : 'hidden md:inline'}>My Bookmarks</span>
             </Button>
           </Link>
           <Link href="/profile" onClick={closeMenu}>
             <Button variant="ghost" className="hover:bg-teal-50">
               <User className="h-5 w-5 md:mr-2" />
-              <span className="hidden md:inline">Profile</span>
+              <span className={isMobile ? '' : 'hidden md:inline'}>Profile</span>
             </Button>
           </Link>
           <Button
@@ -67,7 +69,7 @@ export default function Header() {
             Login
           </Button>
         </Link>
-        <Link href="/signup" onClick={closeMenu}>
+        <Link href="/auth/signup" onClick={closeMenu}>
           <Button className="bg-teal-600 hover:bg-teal-700 w-full">
             Sign Up
           </Button>
@@ -80,7 +82,6 @@ export default function Header() {
     <header className="bg-white border-b sticky top-0 z-50">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link href="/" className="flex items-center">
             <div className="w-10 h-10 rounded-md bg-teal-600 flex items-center justify-center text-white font-bold text-xl mr-2">
               NC
@@ -88,7 +89,6 @@ export default function Header() {
             <span className="font-bold text-xl text-gray-900">NextCourse</span>
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/" className="text-gray-900 font-medium hover:text-teal-600 transition-colors">
               Home
@@ -102,13 +102,11 @@ export default function Header() {
             <AuthButtons />
           </nav>
 
-          {/* Mobile Menu Button */}
           <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
             {isMenuOpen ? <X className="h-6 w-6 text-gray-900" /> : <Menu className="h-6 w-6 text-gray-900" />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t">
             <nav className="flex flex-col space-y-4">
