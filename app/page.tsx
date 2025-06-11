@@ -71,10 +71,32 @@ async function getRecommendedCourses(): Promise<Course[]> {
     const json = await res.json();
 
     const usedInCollaborative = json.data.user.used_in_collaborative;
+    const onboardingDone = json.data.user.onboarding_done;
 
     if (!usedInCollaborative) {
-      // Harusnya bisa menyesuaikan hasil onboarding
-      console.warn("User tidak menggunakan fitur collaborative, mengembalikan kursus populer.");
+      if (onboardingDone) {
+        const subjects = json.data.preferences.subject;
+        const levels = json.data.preferences.level;
+
+        let subjectArgs = ''
+        subjects.map((subject: string) => {
+          if (subjectToNum[subject]) {
+            subjectArgs += `${subjectToNum[subject]},`;
+          }
+        });
+        subjectArgs = subjectArgs.slice(0, -1);
+
+        let levelArgs = ''
+        levels.map((level: string) => {
+          if (levelToNum[level]) {
+            levelArgs += `${levelToNum[level]},`;
+          }
+        });
+        levelArgs = levelArgs.slice(0, -1);
+
+        return getMainCourses(token, subjectArgs, levelArgs, undefined, undefined);
+      }
+      
       return getMainCourses(token, undefined, undefined, undefined, undefined);
     }
     
