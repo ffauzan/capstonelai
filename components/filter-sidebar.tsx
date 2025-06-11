@@ -130,7 +130,7 @@ export default function FilterSidebar() {
                     onCheckedChange={() => handleFilterChange('is_paid', '0')}
                   />
                   <label htmlFor="price-free" className="text-sm font-medium leading-none cursor-pointer">
-                    Gratis
+                    FREE
                   </label>
                 </div>
                 <div className="flex items-center space-x-2">
