@@ -52,7 +52,7 @@ export default function OnboardingPage() {
   // Fungsi untuk mengirim preferensi ke API
   const handleSubmitPreferences = async () => {
     if (selectedSubjects.length === 0 || selectedLevels.length === 0) {
-      setError('Silakan pilih minimal satu subjek dan satu level.');
+      setError('Please choose one subject and one level.');
       return;
     }
 
@@ -75,7 +75,7 @@ export default function OnboardingPage() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || 'Gagal menyimpan preferensi.');
+        throw new Error(errorData.message || 'Error.');
       }
 
       // Jika berhasil, arahkan ke halaman utama
@@ -154,7 +154,7 @@ export default function OnboardingPage() {
             disabled={loading}
             className="w-full bg-teal-600 text-white py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors disabled:bg-teal-400 disabled:cursor-not-allowed"
           >
-            {loading ? 'Menyimpan...' : 'Simpan Preferensi & Mulai'}
+            {loading ? 'Saving...' : 'Save preference and start'}
           </button>
         </div>
       </div>

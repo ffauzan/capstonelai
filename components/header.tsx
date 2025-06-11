@@ -66,7 +66,7 @@ export default function Header() {
             Login
           </Button>
         </Link>
-        <Link href="/signup" onClick={closeMenu}>
+        <Link href="/auth/signup" onClick={closeMenu}>
           <Button className="bg-teal-600 hover:bg-teal-700 w-full">
             Sign Up
           </Button>

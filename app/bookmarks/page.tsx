@@ -36,7 +36,7 @@ async function getBookmarkedCourses(token: string): Promise<Course[]> {
     });
 
     if (!meRes.ok) {
-      console.error('Gagal mengambil data pengguna:', meRes.statusText);
+      console.error('Fail to take data:', meRes.statusText);
       return [];
     }
 
@@ -91,10 +91,10 @@ export default async function BookmarkedCoursesPage() {
         <Bookmark className="h-8 w-8 text-teal-600" />
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Kursus yang Anda Simpan
+            Your saved courses
           </h1>
           <p className="text-lg text-gray-600 mt-1">
-            Lihat kembali kursus yang telah Anda tandai untuk dipelajari nanti.
+            See your saved here.
           </p>
         </div>
       </div>
@@ -108,13 +108,13 @@ export default async function BookmarkedCoursesPage() {
         </div>
       ) : (
         <div className="text-center py-20 bg-white rounded-lg shadow-sm border">
-          <h2 className="text-2xl font-semibold text-gray-700">Anda Belum Menyimpan Kursus Apapun</h2>
+          <h2 className="text-2xl font-semibold text-gray-700">You not save any course yet</h2>
           <p className="text-gray-500 mt-2 mb-6">
-            Mulai jelajahi dan simpan kursus yang menarik perhatian Anda.
+            Start exploring courses.
           </p>
           <Link href="/courses">
             <button className="bg-teal-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-teal-700 transition-colors">
-              Jelajahi Kursus
+              Explore course
             </button>
           </Link>
         </div>
