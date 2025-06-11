@@ -49,10 +49,10 @@ export default async function CoursesPage() {
     <div className="container px-4 mx-auto max-w-6xl py-8">
       <div className="mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-          Jelajahi Kursus
+          Course
         </h1>
         <p className="text-lg text-gray-600 mt-2">
-          Berikut adalah beberapa kursus pilihan acak untuk Anda.
+          Random Course for You
         </p>
       </div>
 
