@@ -112,7 +112,7 @@ export default async function Home({
     ? "Hasil Filter Kursus"
     : token
     ? "Rekomendasi Khusus Untuk Anda"
-    : "Kursus Pilihan Untukmu";
+    : "Course Recommendation";
 
   return (
     <main className="min-h-screen bg-gray-50">
