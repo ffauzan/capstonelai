@@ -22,7 +22,7 @@ async function getSearchResults(query: string): Promise<Course[]> {
   }
 
   // Asumsi endpoint pencarian menggunakan parameter `title`. Sesuaikan jika berbeda.
-  const endpoint = `https://dev-nc-api.f3h.net/api/courses?title=${encodeURIComponent(query)}`;
+  const endpoint = `https://dev-nc-api.f3h.net/api/courses?search=${encodeURIComponent(query)}`;
 
   try {
     const res = await fetch(endpoint, { cache: 'no-store' });
