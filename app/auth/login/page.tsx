@@ -79,7 +79,7 @@ export default function LoginPage() {
               <input
                 id="username"
                 type="text"
-                placeholder="Masukkan username Anda"
+                placeholder="Input your username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
