@@ -124,7 +124,7 @@ export default function CourseCard({ course }: Props) {
 
         <p className="text-sm text-gray-500 mb-1">{course.level}</p>
         <p className="text-green-600 font-medium text-sm mb-3">
-          {course.is_paid ? `$${course.price}` : "Gratis"}
+          {course.is_paid ? `$${course.price}` : "FREE"}
         </p>
         
         <div className="flex-grow" />

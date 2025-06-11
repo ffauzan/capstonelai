@@ -6,7 +6,7 @@ export default function AboutPage() {
           <strong>NextCourse</strong> is a personalized course recommender platform that helps learners discover the most relevant online courses tailored to their interests, preferences, and career goals.
         </p>
   
-        <h2 className="text-2xl font-semibold mt-10 mb-4">👥 Tim Pengembang LAI25-SM017</h2>
+        <h2 className="text-2xl font-semibold mt-10 mb-4">👥 Our Team (LAI25-SM017)</h2>
   
         <ul className="mb-6 space-y-3">
         <li>
@@ -37,7 +37,7 @@ export default function AboutPage() {
   
         <h2 className="text-xl font-semibold mt-8 mb-2">📃 Lisensi</h2>
         <p className="mb-2">
-          Proyek ini dibuat sebagai bagian dari <strong>Capstone Project</strong> untuk program <em>Laskar AI x Dicoding x Lintasarta</em>.
+        This project was created as the  <strong>Capstone Project</strong> for the <em>Laskar AI x Dicoding x Lintasarta</em> program.
         </p>
       </main>
     )
