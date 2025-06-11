@@ -63,10 +63,10 @@ export default async function Recommendation2Page({
         <Lightbulb className="h-8 w-8 text-teal-600" />
         <div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Kursus Serupa
+            Similar Courses
           </h1>
           <p className="text-lg text-gray-600 mt-1">
-            Jika Anda menyukai kursus sebelumnya, mungkin Anda juga tertarik dengan ini.
+            Maybe you like this
           </p>
         </div>
       </div>
@@ -79,9 +79,9 @@ export default async function Recommendation2Page({
         </div>
       ) : (
         <div className="text-center py-20 bg-white rounded-lg shadow-sm border">
-          <h2 className="text-2xl font-semibold text-gray-700">Tidak Ada Rekomendasi Ditemukan</h2>
+          <h2 className="text-2xl font-semibold text-gray-700">No Recommendation</h2>
           <p className="text-gray-500 mt-2">
-            Kami belum menemukan kursus yang cukup mirip.
+            No similar courses.
           </p>
         </div>
       )}
