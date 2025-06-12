@@ -38,14 +38,34 @@ export default function ClientHome({
   const [recommendedCourses, setRecommendedCourses] = useState<Course[]>([]);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
 
+  const [filters, setFilters] = useState({
+    subject: searchParams.subject || "",
+    level: searchParams.level || "",
+    is_paid: searchParams.is_paid || "",
+    title: searchParams.title || "",
+  });
+
   const mainCoursesRef = useRef<HTMLDivElement>(null);
 
   const fetchMainCourses = async (page: number) => {
-    const { subject, level, is_paid, title } = searchParams;
+    const { subject, level, is_paid, title } = filters;
     const data = await getMainCourses(token, subject, level, is_paid, title, page);
     setMainCourses(data.courses);
     setTotalPages(data.totalPages);
   };
+
+  const handleFilterChange = (newFilters: Partial<typeof filters>) => {
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+  };
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setCurrentPage(1); // Reset to the first page
+      fetchMainCourses(1);
+    }, 300); // Adjust debounce delay as needed
+
+    return () => clearTimeout(timeout);
+  }, [filters]);
 
   const fetchRecommendedCourses = async () => {
     if (token) {
@@ -69,6 +89,12 @@ export default function ClientHome({
         mainCoursesRef.current.scrollIntoView({ behavior: "smooth" });
       }
   }, [currentPage, token]);
+
+  useEffect(() => {
+    if (mainCoursesRef.current) {
+      mainCoursesRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [filters]);
 
   const hasFilters = !!(searchParams.subject || searchParams.level || searchParams.is_paid || searchParams.title);
 
@@ -117,10 +143,10 @@ export default function ClientHome({
         </h2>
         <div className="lg:grid lg:grid-cols-4 lg:gap-8">
           <div className="lg:hidden mb-6">
-            <MobileFilters />
+            <MobileFilters onChange={(newFilters) => handleFilterChange(newFilters)} />
           </div>
           <div className="hidden lg:block">
-            <FilterSidebar />
+            <FilterSidebar onChange={(newFilters) => handleFilterChange(newFilters)} />
           </div>
           <div className="lg:col-span-3">
             {mainCourses.length > 0 ? (
