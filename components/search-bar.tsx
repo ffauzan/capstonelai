@@ -26,7 +26,7 @@ export default function SearchBar() {
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Cari kursus, keahlian, atau subjek..."
+          placeholder="Find course"
           className="flex-1 outline-none text-gray-700 bg-transparent"
         />
         <button

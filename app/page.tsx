@@ -5,6 +5,7 @@ import FilterSidebar from "@/components/filter-sidebar"
 import MobileFilters from "@/components/mobile-filters"
 import SearchBar from "@/components/search-bar"
 
+const API_BASE_URL = "https://dev-nc-api.f3h.net";
 // Tipe data tetap sama
 interface Course {
   id: number
@@ -18,23 +19,103 @@ interface Course {
   image_banner_url: string
 }
 
-// Fungsi untuk mengambil kursus yang sedang tren (tidak ada perubahan)
-async function getTrendingCourses(): Promise<Course[]> {
-  const apiBaseUrl = "https://dev-nc-api.f3h.net";
-  const endpoint = `${apiBaseUrl}/api/courses/recommender2?user_id=user_51&n=5`;
+// Subject mapping
+const subjects = [
+  "Business Finance",
+  "Graphic Design",
+  "Web Development",
+  "Musical Instruments",
+];
 
+const subjectToNum: Record<string, number> = Object.fromEntries(
+  subjects.map((subject, index) => [subject, index + 1])
+);
+
+const subjectToWord: Record<number, string> = Object.fromEntries(
+  subjects.map((subject, index) => [index + 1, subject])
+);
+
+// Level mapping
+const levels = [
+  "Beginner Level",
+  "Intermediate Level",
+  "Expert Level",
+  "All Levels"
+];
+
+const levelToNum: Record<string, number> = Object.fromEntries(
+  levels.map((level, index) => [level, index + 1])
+);
+
+const levelToWord: Record<number, string> = Object.fromEntries(
+  levels.map((level, index) => [index + 1, level])
+);
+
+async function getRecommendedCourses(): Promise<Course[]> {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
+
+  // Get user profile
+  const endpoint = `${API_BASE_URL}/me`;
+  const fetchOptions: RequestInit = {
+    headers: { 'Authorization': `Bearer ${token}` },
+    cache: "no-store"
+  };
   try {
-    const res = await fetch(endpoint, { cache: "no-store" });
+    const res = await fetch(endpoint, fetchOptions);
     if (!res.ok) {
-      console.error("Gagal mengambil data trending:", res.statusText);
+      console.error("Gagal mengambil data profil:", res.statusText);
       return [];
     }
+
     const json = await res.json();
-    return json.data || [];
+
+    const usedInCollaborative = json.data.user.used_in_collaborative;
+    const onboardingDone = json.data.user.onboarding_done;
+
+    if (!usedInCollaborative) {
+      if (onboardingDone) {
+        const subjects = json.data.preferences.subject;
+        const levels = json.data.preferences.level;
+
+        let subjectArgs = ''
+        subjects.map((subject: string) => {
+          if (subjectToNum[subject]) {
+            subjectArgs += `${subjectToNum[subject]},`;
+          }
+        });
+        subjectArgs = subjectArgs.slice(0, -1);
+
+        let levelArgs = ''
+        levels.map((level: string) => {
+          if (levelToNum[level]) {
+            levelArgs += `${levelToNum[level]},`;
+          }
+        });
+        levelArgs = levelArgs.slice(0, -1);
+
+        return getMainCourses(token, subjectArgs, levelArgs, undefined, undefined);
+      }
+      
+      return getMainCourses(token, undefined, undefined, undefined, undefined);
+    }
+    
+    // Ambil rekomendasi kursus berdasarkan user_id
+    const coursesEndpoint = `${API_BASE_URL}/api/courses/recommender3?&n=20`;
+    const coursesRes = await fetch(coursesEndpoint, fetchOptions);
+    
+    if (!coursesRes.ok) {
+      console.error("Gagal mengambil data rekomendasi kursus:", coursesRes.statusText);
+      return [];
+    }
+    
+    const coursesJson = await coursesRes.json();
+    return coursesJson.data || [];
   } catch (error) {
-    console.error("Error saat fetch data trending:", error);
+    console.error("Error saat fetch data rekomendasi kursus:", error);
     return [];
   }
+
 }
 
 // PERBAIKAN FINAL: Fungsi ini sekarang menerima nilai filter sebagai argumen primitif individual
@@ -59,12 +140,12 @@ async function getMainCourses(
 
   // Logika endpoint yang diperbaiki
   if (hasFilters) {
-    endpoint = `${apiBaseUrl}/api/courses?${queryParams.toString()}`;
-  } else if (token) {
-    endpoint = `${apiBaseUrl}/api/courses/recommender3?n=9`;
-    fetchOptions.headers = { 'Authorization': `Bearer ${token}` };
+    endpoint = `${apiBaseUrl}/api/courses?${queryParams.toString()}&page=1&per_page=54&order_by=num_subscribers&order_direction=desc`;
+  // } else if (token) {
+  //   endpoint = `${apiBaseUrl}/api/courses/recommender3?n=9`;
+  //   fetchOptions.headers = { 'Authorization': `Bearer ${token}` };
   } else {
-    endpoint = `${apiBaseUrl}/api/courses/random?n=9`;
+    endpoint = `${apiBaseUrl}/api/courses?page=1&per_page=54&order_by=num_subscribers&order_direction=desc`;
   }
 
   try {
@@ -94,25 +175,22 @@ export default async function Home({
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
-  // PERBAIKAN FINAL: Ekstrak nilai dari searchParams di sini
-  const subject = searchParams.subject;
-  const level = searchParams.level;
-  const is_paid = searchParams.is_paid;
-  const title = searchParams.title;
-  
+  // Await searchParams to ensure it is resolved before accessing its properties
+  const { subject, level, is_paid, title } = await Promise.resolve(searchParams);
+
   // Ambil data dengan meneruskan variabel individual, bukan objek searchParams
-  const [mainCourses, trendingCourses] = await Promise.all([
+  const [mainCourses, recommendedCourses] = await Promise.all([
     getMainCourses(token, subject, level, is_paid, title),
-    token ? getTrendingCourses() : Promise.resolve([]) 
+    token ? getRecommendedCourses() : Promise.resolve([]) 
   ]);
-  
+
   const hasFilters = !!(subject || level || is_paid || title);
 
   const recommendationTitle = hasFilters
-    ? "Hasil Filter Kursus"
+    ? "Top Courses"
     : token
-    ? "Rekomendasi Khusus Untuk Anda"
-    : "Course Recommendation";
+    ? "Top Courses"
+    : "Top Courses";
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -134,14 +212,14 @@ export default async function Home({
         </div>
       </section>
       
-      {trendingCourses.length > 0 && !hasFilters && (
+      {recommendedCourses.length > 0 && (
         <section className="container px-4 mx-auto max-w-6xl py-8">
             <div className="flex items-center mb-6 space-x-3">
                 <TrendingUp className="h-7 w-7 text-gray-800" />
-                <h2 className="text-2xl font-bold text-gray-900">Sedang Tren Saat Ini</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Recommended Courses Just For You 💓</h2>
             </div>
             <div className="flex space-x-6 overflow-x-auto pb-4 -mx-4 px-4">
-                {trendingCourses.map((course) => (
+                {recommendedCourses.map((course) => (
                    <div key={`trending-${course.id}`} className="flex-shrink-0 w-80">
                         <CourseCard course={course} />
                    </div>

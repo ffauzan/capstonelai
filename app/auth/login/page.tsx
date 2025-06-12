@@ -61,14 +61,14 @@ export default function LoginPage() {
       <div className="w-full max-w-md">
         <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800">Selamat Datang Kembali</h1>
-            <p className="text-gray-500 mt-2">Masuk untuk melanjutkan perjalanan belajar Anda.</p>
+            <h1 className="text-3xl font-bold text-gray-800">Welcome Back</h1>
+            <p className="text-gray-500 mt-2">Login to continue your learning journey.</p>
           </div>
 
           {/* Menampilkan pesan error jika ada */}
           {error && (
             <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded-lg" role="alert">
-              <p className="font-bold">Terjadi Kesalahan</p>
+              <p className="font-bold">Error</p>
               <p>{error}</p>
             </div>
           )}
@@ -113,9 +113,9 @@ export default function LoginPage() {
           </form>
           
           <p className="text-center text-sm text-gray-600 mt-8">
-            Belum punya akun?{' '}
+            No account yet?{' '}
             <Link href="/signup" className="font-medium text-teal-600 hover:text-teal-500">
-              Daftar di sini
+              Signup Here
             </Link>
           </p>
         </div>

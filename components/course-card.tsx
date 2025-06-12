@@ -81,7 +81,7 @@ export default function CourseCard({ course }: Props) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100 hover:shadow-md transition-shadow flex flex-col h-full">
-      <Link href={`/courses/${course.course_id}`} className="block relative h-40 w-full">
+      <Link href={course.url} className="block relative h-40 w-full">
         <Image
           src={course.image_banner_url || "/placeholder.svg"}
           alt={course.course_title}
@@ -97,7 +97,7 @@ export default function CourseCard({ course }: Props) {
 
       <div className="p-5 flex flex-col flex-grow">
         <div className="flex justify-between items-start mb-2">
-          <Link href={`/courses/${course.course_id}`} className="flex-grow group pr-2">
+          <Link href={course.url} className="flex-grow group pr-2">
             <h3 className="text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-teal-600 transition-colors">
               {course.course_title}
             </h3>
@@ -119,12 +119,12 @@ export default function CourseCard({ course }: Props) {
             />
           </button>
 
-     
+
         </div>
 
         <p className="text-sm text-gray-500 mb-1">{course.level}</p>
         <p className="text-green-600 font-medium text-sm mb-3">
-          {course.is_paid ? `$${course.price}` : "Gratis"}
+          {course.is_paid ? `$${course.price}` : "FREE"}
         </p>
         
         <div className="flex-grow" />

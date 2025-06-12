@@ -56,7 +56,7 @@ export default async function SearchPage({
           <Search className="h-8 w-8 text-teal-600" />
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Hasil Pencarian
+              Search Results
             </h1>
             {query && (
               <p className="text-lg text-gray-600 mt-1">
